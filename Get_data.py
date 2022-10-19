@@ -16,9 +16,12 @@ i_value = 0  # I term thing
 p = 200     # p term multiplier
 i = 1   # i term multiplier
 d = 50  # d term multiplier
+ff = 50 # Feed Forward (boosts object with setpoint derivative)
 
 wind = False  # If wind is being simulated (explaining I term)
 i_enable = False
+
+FF_enable = True # if Feed Forward is being enabled
 
 weight = 1  # weight in kg
 
@@ -76,8 +79,8 @@ def get_data():
 starttime = time.time()
 lasttime = time.time()
 
-for z in range(1000):   # for linux
-# for z in range(10000):    # for windows
+# for z in range(500):   # for linux
+for z in range(10000):    # for windows
     pygame.event.pump()     # get new mouse info
 
     x, vx = movementUpdate(x, vx, ax)   # physics
@@ -96,9 +99,9 @@ for z in range(1000):   # for linux
     pygame.display.flip()
     screen.fill((0, 0, 0))
 
-plt.plot(ms, acc, label="Acceleration")
-plt.plot(ms, vel, label="Velocity")
-plt.plot(ms, error, label="Error")
+#plt.plot(ms, acc, label="Acceleration")
+#plt.plot(ms, vel, label="Velocity")
+#plt.plot(ms, error, label="Error")
 plt.plot(ms, i_vals, label="I-term")
 plt.plot(ms, baseline, label="Setpoint")
 plt.plot(ms, actualVals, label="Position")
