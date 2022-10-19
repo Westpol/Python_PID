@@ -28,6 +28,7 @@ vel = []
 error = []
 i_vals = []
 baseline = []
+actualVals = []
 
 
 def drawRect(pos, sp):
@@ -67,13 +68,16 @@ def get_data():
     vel.append(vx)
     i_vals.append(i_value)
     error.append((x - MouseSetpoint)*3)
-    baseline.append(0)
+    baseline.append((width - MouseSetpoint) * 2)
+    actualVals.append((width - x) * 2)
+    print(i_value)
 
 
 starttime = time.time()
 lasttime = time.time()
 
-for z in range(10000):
+for z in range(1000):   # for linux
+# for z in range(10000):    # for windows
     pygame.event.pump()     # get new mouse info
 
     x, vx = movementUpdate(x, vx, ax)   # physics
@@ -96,7 +100,8 @@ plt.plot(ms, acc, label="Acceleration")
 plt.plot(ms, vel, label="Velocity")
 plt.plot(ms, error, label="Error")
 plt.plot(ms, i_vals, label="I-term")
-plt.plot(ms, baseline)
+plt.plot(ms, baseline, label="Setpoint")
+plt.plot(ms, actualVals, label="Position")
 
 plt.legend()
 plt.show()
