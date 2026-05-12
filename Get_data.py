@@ -47,8 +47,8 @@ collect_actualVals = []
 
 
 def drawRect(pos, sp):
-    pygame.draw.line(screen, (255, 255, 255), (sp, 0), (sp, height))    # draw vertical line on setpoint
-    pygame.draw.rect(screen, (255, 255, 255), (pos-100/2, height/2-100/2, 100, 100))    # draw rectangle
+    pygame.draw.line(screen, (0, 0, 0), (sp, 0), (sp, height))    # draw vertical line on setpoint
+    pygame.draw.rect(screen, (0, 0, 0), (pos-100/2, height/2-100/2, 100, 100))    # draw rectangle
     pygame.draw.line(screen, (127, 127, 127), (pos, height/2-100/2), (pos, height/2+100/2))     # draw a line in the middle of the rectangle
 
 
@@ -101,7 +101,7 @@ while 1:
 
     drawRect(x, MouseSetpoint)  # draw things
     pygame.display.flip()
-    screen.fill((0, 0, 0))
+    screen.fill((255, 255, 255))
 
 starttime = time.time()
 # for z in range(500):   # for linux
@@ -115,7 +115,7 @@ for z in range(120):    # for windows
 
     drawRect(x, MouseSetpoint)  # draw things
     pygame.display.flip()
-    screen.fill((0, 0, 0))
+    screen.fill((255, 255, 255))
 
 # Physics
 
