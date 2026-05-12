@@ -8,20 +8,21 @@ pygame.display.set_caption("PID Controller")
 width, height = pygame.display.get_window_size()
 clock = pygame.time.Clock()
 
-sim_speed:int = 10
+sim_speed:int = 100
 sim_step:int = 0
 dt:float = 1/sim_speed
+
+acceleration_limit = 100 * dt
 
 MouseSetpoint:float = width/2
 x:float = width/2+250     # position on the x-axis
 vx:float = 0.0    # velocity on the x-axis
 ax:float = 0.0    # acceleration on the x-axis
-i_value:float = 0  # I term thing
 
-master_scaling:float = 10 # scales every term the same way
-p:float = 5    # p term multiplier
+master_scaling:float = 15 # scales every term the same way
+p:float = 10    # p term multiplier
 i:float = 1   # i term multiplier
-d:float = 24   # d term multiplier
+d:float = 30   # d term multiplier
 ff = 50 # Feed Forward (boosts object with setpoint derivative)
 
 p /= master_scaling
@@ -31,9 +32,10 @@ ff /= master_scaling
 
 wind:bool = False  # If wind is being simulated (explaining I term)
 i_enable:bool = False
-correct_d:bool = False
+correct_d:bool = True
 
 last_error:float = 0.0
+i_value:float = 0
 
 FF_enable = True # if Feed Forward is being enabled
 
@@ -47,8 +49,8 @@ collect_actualVals = []
 
 
 def drawRect(pos, sp):
-    pygame.draw.line(screen, (255, 255, 255), (sp, 0), (sp, height))    # draw vertical line on setpoint
-    pygame.draw.rect(screen, (255, 255, 255), (pos-100/2, height/2-100/2, 100, 100))    # draw rectangle
+    pygame.draw.line(screen, (0, 0, 0), (sp, 0), (sp, height))    # draw vertical line on setpoint
+    pygame.draw.rect(screen, (0, 0, 0), (pos-100/2, height/2-100/2, 100, 100))    # draw rectangle
     pygame.draw.line(screen, (127, 127, 127), (pos, height/2-100/2), (pos, height/2+100/2))     # draw a line in the middle of the rectangle
 
 
@@ -99,9 +101,9 @@ while 1:
 
     MouseSetpoint = pygame.mouse.get_pos()[0]   # save mouse info to int
 
-    drawRect(x, MouseSetpoint)  # draw things
+    drawRect(x, MouseSetpoint)  # draw rect and line
     pygame.display.flip()
-    screen.fill((0, 0, 0))
+    screen.fill((255, 255, 255))
 
 starttime = time.time()
 # for z in range(500):   # for linux
@@ -115,7 +117,7 @@ for z in range(120):    # for windows
 
     drawRect(x, MouseSetpoint)  # draw things
     pygame.display.flip()
-    screen.fill((0, 0, 0))
+    screen.fill((255, 255, 255))
 
 # Physics
 
@@ -123,7 +125,7 @@ for z in range(120):    # for windows
         x, vx = movementUpdate(x, vx, ax)   # physics
         ax = PID(MouseSetpoint, x, vx)
 
-        ax = max(min(ax, 50 * dt), -50 * dt)
+        ax = max(min(ax, acceleration_limit), -acceleration_limit)
 
 # Data collection
 
